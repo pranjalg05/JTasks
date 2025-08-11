@@ -19,12 +19,10 @@ public class User {
 
     @Id
     private ObjectId id;
-    @NotBlank
     @Indexed(unique = true)
     private String username;
-    @NotBlank
     private String password;
-    private List<String> roles;
+    private List<Roles> roles;
 
 
 }

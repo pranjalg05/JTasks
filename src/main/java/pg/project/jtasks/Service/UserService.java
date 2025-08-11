@@ -9,10 +9,12 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import pg.project.jtasks.Entity.Collection;
 import pg.project.jtasks.Entity.CollectionType;
+import pg.project.jtasks.Entity.Roles;
 import pg.project.jtasks.Entity.User;
 import pg.project.jtasks.Repository.CollectionRepository;
 import pg.project.jtasks.Repository.UserRepository;
 
+import java.util.Collections;
 import java.util.List;
 
 @Service
@@ -27,8 +29,12 @@ public class UserService {
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
-    public boolean createUser(User user) {
+    public boolean createUser(String username, String password) {
         try {
+            User user = new User();
+            user.setUsername(username);
+            user.setPassword(password);
+            user.setRoles(Collections.singletonList(Roles.USER));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
             User savedUser = userRepository.save(user);
             Collection daily = new Collection();
@@ -37,11 +43,8 @@ public class UserService {
             daily.setType(CollectionType.DAILY);
             collectionRepository.save(daily);
             return true;
-        } catch (DuplicateKeyException e) {
-            log.error("Username already exists: ", e);
-            return false;
         } catch (Exception e) {
-            log.error("error while creating user: ", e);
+            log.error("Error while creating user: ", e);
             return false;
         }
     }

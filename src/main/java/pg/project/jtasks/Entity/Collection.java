@@ -17,7 +17,6 @@ public class Collection {
     @Id
     private ObjectId collectionId;
     private ObjectId userId;
-    @NotBlank
     private String collectionName;
     private CollectionType type;
 

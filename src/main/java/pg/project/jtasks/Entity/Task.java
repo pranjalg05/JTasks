@@ -19,7 +19,6 @@ public class Task {
     @Id
     private ObjectId taskId;
     private ObjectId collectionId;
-    @NotBlank
     private String title;
     private boolean isComplete;
     private LocalDateTime dateCreated;

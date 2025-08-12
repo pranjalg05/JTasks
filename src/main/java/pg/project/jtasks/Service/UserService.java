@@ -12,6 +12,7 @@ import pg.project.jtasks.Entity.CollectionType;
 import pg.project.jtasks.Entity.Roles;
 import pg.project.jtasks.Entity.User;
 import pg.project.jtasks.Repository.CollectionRepository;
+import pg.project.jtasks.Repository.TaskRepository;
 import pg.project.jtasks.Repository.UserRepository;
 
 import java.util.Collections;
@@ -26,6 +27,9 @@ public class UserService {
 
     @Autowired
     private CollectionRepository collectionRepository;
+
+    @Autowired
+    private TaskRepository taskRepository;
 
     private static final PasswordEncoder passwordEncoder = new BCryptPasswordEncoder();
 
@@ -43,34 +47,39 @@ public class UserService {
             daily.setType(CollectionType.DAILY);
             collectionRepository.save(daily);
             return true;
-        } catch (Exception e) {
-            log.error("Error while creating user: ", e);
+        } catch (DuplicateKeyException e){
+            log.error("User already exists");
+            return false;
+        }
+        catch (Exception e) {
+            log.error("Error while creating user");
             return false;
         }
     }
 
-    public boolean updateUser(ObjectId userId, User updatedUser) {
+    public boolean updateUser(ObjectId userId, String newUsername, String newPassword) {
         User userInDB = userRepository.findById(userId).orElse(null);
         if (userInDB == null) {
             log.error("User Doesn't exist");
             return false;
         }
         try {
-            userInDB.setUsername(updatedUser.getUsername());
-            userInDB.setPassword(updatedUser.getPassword());
+            userInDB.setUsername(newUsername);
+            userInDB.setPassword(passwordEncoder.encode(newPassword));
             userRepository.save(userInDB);
             return true;
         } catch (DuplicateKeyException e) {
-            log.error("User already exists", e);
+            log.error("User already exists");
             return false;
         } catch (Exception e) {
-            log.error("Error updating user", e);
+            log.error("Error updating user");
             return false;
         }
     }
 
     public void deleteUser(ObjectId userId) {
         userRepository.deleteById(userId);
+        deleteAllCollectionsOfUser(userId);
     }
 
     public User getUserById(ObjectId userId) {
@@ -81,6 +90,15 @@ public class UserService {
     public List<Collection> getAllCollectionOfUser(ObjectId userId) {
         return collectionRepository.getAllByUserId(userId);
     }
+
+    public void deleteAllCollectionsOfUser(ObjectId userId){
+        List<Collection> userCollections = collectionRepository.getAllByUserId(userId);
+        for(Collection c: userCollections){
+            taskRepository.deleteAllByCollectionId(c.getCollectionId());
+            collectionRepository.delete(c);
+        }
+    }
+
 
 }
 

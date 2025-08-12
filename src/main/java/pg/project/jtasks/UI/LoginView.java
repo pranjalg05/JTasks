@@ -5,6 +5,8 @@ import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
+import com.vaadin.flow.router.BeforeEnterEvent;
+import com.vaadin.flow.router.BeforeEnterObserver;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
@@ -14,14 +16,16 @@ import lombok.extern.slf4j.Slf4j;
 @Route("login")
 @PageTitle("Login")
 @AnonymousAllowed
-public class LoginView extends VerticalLayout {
+public class LoginView extends VerticalLayout implements BeforeEnterObserver {
+
+    private final LoginOverlay loginBox  = new LoginOverlay();
 
     LoginView(){
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
 
-        LoginOverlay loginBox  = new LoginOverlay();
+
 
         loginBox.setTitle("JTasks");
         loginBox.setDescription("Coding pmos 🥀");
@@ -37,6 +41,17 @@ public class LoginView extends VerticalLayout {
 
         add(title, loginBox);
         loginBox.setOpened(true);
+    }
+
+    @Override
+    public void beforeEnter(BeforeEnterEvent beforeEnterEvent) {
+        // inform the user about an authentication error
+        if(beforeEnterEvent.getLocation()
+                .getQueryParameters()
+                .getParameters()
+                .containsKey("error")) {
+            loginBox.setError(true);
+        }
     }
 
 }

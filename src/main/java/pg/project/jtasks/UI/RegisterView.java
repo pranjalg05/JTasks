@@ -1,5 +1,6 @@
 package pg.project.jtasks.UI;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.button.Button;
 import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
@@ -56,9 +57,11 @@ public class RegisterView extends VerticalLayout {
 
                     if (userService.createUser(username, password)) {
                         Notification.show("Account created succesfully");
-
+                        registerBox.setOpened(true);
+                        UI.getCurrent().navigate("login");
                     } else {
                         Notification.show("Error: User already exists");
+                        registerBox.setOpened(true);
                     }
                 }
         );

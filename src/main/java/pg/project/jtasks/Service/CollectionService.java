@@ -38,12 +38,14 @@ public class CollectionService {
         }
     }
 
-    public void deleteTask(ObjectId collectionId){
+    public void deleteCollection(ObjectId collectionId){
         collectionRepository.deleteById(collectionId);
     }
 
     public List<Collection> getAllTasksOfCollection(ObjectId collectionId) {
         return taskRepository.getAllByCollectionId(collectionId);
     }
+
+
 
 }

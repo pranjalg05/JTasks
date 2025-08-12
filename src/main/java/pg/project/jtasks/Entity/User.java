@@ -1,5 +1,6 @@
 package pg.project.jtasks.Entity;
 
+import com.vaadin.flow.component.avatar.Avatar;
 import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Data;

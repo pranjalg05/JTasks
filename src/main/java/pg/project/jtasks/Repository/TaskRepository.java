@@ -12,4 +12,6 @@ public interface TaskRepository extends MongoRepository<Task, ObjectId> {
     List<Collection> getAllByCollectionId(ObjectId collectionId);
 
     Task findTaskByTaskId(ObjectId taskId);
+
+    void deleteAllByCollectionId(ObjectId collectionId);
 }

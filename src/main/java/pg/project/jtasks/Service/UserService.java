@@ -17,6 +17,7 @@ import pg.project.jtasks.Repository.UserRepository;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 @Service
 @Slf4j
@@ -40,6 +41,7 @@ public class UserService {
             user.setPassword(password);
             user.setRoles(Collections.singletonList(Roles.USER));
             user.setPassword(passwordEncoder.encode(user.getPassword()));
+            user.setAvatarColorIndex(ThreadLocalRandom.current().nextInt(1, 8));
             User savedUser = userRepository.save(user);
             Collection daily = new Collection();
             daily.setCollectionName("Daily");
@@ -66,6 +68,7 @@ public class UserService {
         try {
             userInDB.setUsername(newUsername);
             userInDB.setPassword(passwordEncoder.encode(newPassword));
+            userInDB.setAvatarColorIndex(ThreadLocalRandom.current().nextInt(1, 8));
             userRepository.save(userInDB);
             return true;
         } catch (DuplicateKeyException e) {
@@ -97,6 +100,10 @@ public class UserService {
             taskRepository.deleteAllByCollectionId(c.getCollectionId());
             collectionRepository.delete(c);
         }
+    }
+
+    public User findByUsername(String username){
+        return userRepository.findUserByUsername(username);
     }
 
 

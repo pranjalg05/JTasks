@@ -1,5 +1,6 @@
 package pg.project.jtasks.UI;
 
+import com.vaadin.flow.component.UI;
 import com.vaadin.flow.component.html.Anchor;
 import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
@@ -21,6 +22,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
     private final LoginOverlay loginBox  = new LoginOverlay();
 
     LoginView(){
+        UI.getCurrent().getElement().setAttribute("theme", "dark");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);

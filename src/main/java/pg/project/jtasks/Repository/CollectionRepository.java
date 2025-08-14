@@ -9,4 +9,6 @@ import java.util.List;
 public interface CollectionRepository extends MongoRepository<Collection, ObjectId> {
 
     List<Collection> getAllByUserId(ObjectId userId);
+
+    Collection getCollectionByCollectionId(ObjectId collectionId);
 }

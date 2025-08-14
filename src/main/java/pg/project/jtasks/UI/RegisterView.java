@@ -29,6 +29,7 @@ public class RegisterView extends VerticalLayout {
     UserService userService;
 
     public RegisterView() {
+        UI.getCurrent().getElement().setAttribute("theme", "dark");
         setAlignItems(Alignment.CENTER);
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);

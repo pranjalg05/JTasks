@@ -24,6 +24,7 @@ public class User {
     private String username;
     private String password;
     private List<Roles> roles;
+    private int avatarColorIndex;
 
 
 }

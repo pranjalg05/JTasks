@@ -11,4 +11,6 @@ public interface CollectionRepository extends MongoRepository<Collection, Object
     List<Collection> getAllByUserId(ObjectId userId);
 
     Collection getCollectionByCollectionId(ObjectId collectionId);
+
+
 }

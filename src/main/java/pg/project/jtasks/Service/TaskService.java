@@ -5,7 +5,10 @@ import org.bson.types.ObjectId;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import pg.project.jtasks.Entity.Task;
+import pg.project.jtasks.Repository.CollectionRepository;
 import pg.project.jtasks.Repository.TaskRepository;
+
+import java.time.LocalDate;
 
 @Service
 @Slf4j
@@ -14,10 +17,19 @@ public class TaskService {
     @Autowired
     TaskRepository taskRepository;
 
-    public void addTask(ObjectId collectionId, Task task){
+    @Autowired
+    CollectionRepository collectionRepository;
+
+    public void addTask(ObjectId collectionId, String title){
+        Task task = new Task();
+        task.setTitle(title);
+        task.setComplete(false);
+        task.setDateCreated(LocalDate.now());
         task.setCollectionId(collectionId);
         taskRepository.save(task);
     }
+
+
 
     public void editTask(ObjectId taskId, Task newTask) {
         Task oldtask = taskRepository.findById(taskId).orElse(null);
@@ -32,10 +44,12 @@ public class TaskService {
         }
     }
 
-    public void switchTaskStatus(ObjectId taskId){
-        Task task = taskRepository.findTaskByTaskId(taskId);
-        task.setComplete(!task.isComplete());
+    public void updateTask(Task task){
         taskRepository.save(task);
+    }
+
+    public String CollectionName(Task task){
+        return collectionRepository.findById(task.getCollectionId()).orElse(null).getCollectionName();
     }
 
     public void deleteTask(ObjectId taskId){

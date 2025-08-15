@@ -134,6 +134,7 @@ public class ProfileView extends VerticalLayout {
             authContext.logout();
         });
 
+
         add(content);
 
     }

@@ -56,4 +56,47 @@ mvn spring-boot:run
 ```arduino
 http://localhost:8080
 ```
-   
+---
+
+## Screenshots
+
+### Registration and Login Page
+
+<div style="display: flex"> 
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/102c3c13-182a-433b-8e37-7f432da69cea" />
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/98bf892c-680e-46c5-84bd-5e460653c859" />
+</div>
+
+### Dashboard 
+
+<div style="display: flex">
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/45c94841-6925-4697-911a-53ef0394a76d" />
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/5d4145d7-e5a4-475b-9a26-4ce57658411c" />
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/d9f9058f-5695-49b1-8118-3ddd2ba21f6b" />
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/b2898110-82d2-434f-8101-92da65a4e383" />
+</div>
+
+### Profile View
+
+<img width="1920" height="1080" alt="image" src="https://github.com/user-attachments/assets/e8b5697f-45c1-4eef-9c53-82339cb55e1d" />
+
+### Task View 
+
+<div style="display: flex">
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/57e1e273-0dd1-4e5d-a623-5cbf9c87a923" />
+  <img width="500" height="300" alt="image" src="https://github.com/user-attachments/assets/dcc03639-bee8-4612-9ba4-2ea02747fe5e" />
+</div>
+---
+
+## Future Improvements
+- OAuth2 Login (Google/Github)
+- Responsive Mobile UI
+- Visual Tracking (Charts)
+- Notification/ Remainders
+---
+
+## Contributing
+Contributions are Welcome
+- Fork the repo
+- Create a feature branch
+- Submit pull request 

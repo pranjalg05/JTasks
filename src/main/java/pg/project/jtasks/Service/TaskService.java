@@ -31,19 +31,6 @@ public class TaskService {
 
 
 
-    public void editTask(ObjectId taskId, Task newTask) {
-        Task oldtask = taskRepository.findById(taskId).orElse(null);
-        if (oldtask == null) {
-            log.error("User Doesn't exist");
-        }
-        try {
-            oldtask.setTitle(newTask.getTitle());
-            taskRepository.save(oldtask);
-        } catch (Exception e) {
-            log.error("Error updating collection", e);
-        }
-    }
-
     public void updateTask(Task task){
         taskRepository.save(task);
     }

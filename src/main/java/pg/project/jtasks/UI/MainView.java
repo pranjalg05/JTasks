@@ -12,6 +12,7 @@ import com.vaadin.flow.component.checkbox.Checkbox;
 import com.vaadin.flow.component.confirmdialog.ConfirmDialog;
 import com.vaadin.flow.component.dialog.Dialog;
 import com.vaadin.flow.component.grid.Grid;
+import com.vaadin.flow.component.grid.GridVariant;
 import com.vaadin.flow.component.html.*;
 import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.notification.Notification;
@@ -28,7 +29,6 @@ import com.vaadin.flow.spring.security.AuthenticationContext;
 import com.vaadin.flow.theme.lumo.Lumo;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.security.PermitAll;
-import kotlin.reflect.jvm.internal.impl.util.Check;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.context.SecurityContext;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -67,7 +67,10 @@ public class MainView extends AppLayout {
     private ConfirmDialog confirmDialogMulti;
     private VerticalLayout dashboardLayout;
     private Grid<Task> taskGrid;
-    List<Collection> collections;
+    private List<Collection> collections;
+    private VerticalLayout taskLayout;
+    private HorizontalLayout taskStatus;
+    private Span allTaskStatus;
 
 
     @PostConstruct
@@ -142,7 +145,7 @@ public class MainView extends AppLayout {
         tasks.getStyle()
                 .set("border-radius", "7px")
                 .set("padding", "0.5rem 1rem");
-        tasks.addClickListener(click -> setContent(taskGrid));
+        tasks.addClickListener(click -> setContent(taskLayout));
 
         topSection.add(dashboardButton, tasks);
 
@@ -305,9 +308,7 @@ public class MainView extends AppLayout {
 
 
         Button viewCollection = new Button("View");
-        viewCollection.addClickListener(click -> {
-            UI.getCurrent().navigate("tasks/" + collection.getCollectionId().toHexString());
-        });
+        viewCollection.addClickListener(click -> UI.getCurrent().navigate("tasks/" + collection.getCollectionId().toHexString()));
 
         Button deleteCollection = new Button("Delete");
         deleteCollection.addThemeVariants(ButtonVariant.LUMO_ERROR);
@@ -342,21 +343,45 @@ public class MainView extends AppLayout {
                 taskService.updateTask(task);
             });
             return checkbox;
-        })).setHeader("Status");
+        })).setHeader("Status").setWidth("80px").setFlexGrow(0);
         taskGrid.addColumn(Task::getTitle).setHeader("Task");
         taskGrid.addColumn(Task::getDateCreated).setHeader("Date Created");
         taskGrid.addColumn(task -> taskService.CollectionName(task)).setHeader("Collection");
+        taskGrid.addColumn(new ComponentRenderer<>(task -> {
+            Button delete = new Button(VaadinIcon.TRASH.create());
+            delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            delete.addClickListener(click -> {
+                taskService.deleteTask(task.getTaskId());
+                updateTasks();
+            });
+            return delete;
+        })).setHeader("Delete").setWidth("80px").setFlexGrow(0);
+
         taskGrid.setEmptyStateText("No Tasks Found");
 
+       updateTasks();
+
+        taskStatus.add(allTaskStatus);
+
+        taskLayout.add(taskStatus, taskGrid);
+    }
+
+    private void updateTasks(){
         List<Task> allTasks = new ArrayList<>();
 
         for (Collection c : collections) {
             List<Task> tasks = collectionService.getAllTasksOfCollection(c.getCollectionId());
             allTasks.addAll(tasks);
         }
-
         taskGrid.setItems(allTasks);
 
+        int completedtasks = (int) allTasks.stream().filter(Task::isComplete).count();
+
+        allTaskStatus = new Span();
+        allTaskStatus.setText(completedtasks +"/" + allTasks.size());
+        allTaskStatus.getElement().getThemeList().add("badge success");
+        allTaskStatus.setWidth("70px");
+        allTaskStatus.setHeight("40px");
     }
 
     private void beforeEnter() {
@@ -378,8 +403,23 @@ public class MainView extends AppLayout {
         dashboardLayout.setPadding(false);
         dashboardLayout.setSpacing(true);
 
+        taskStatus = new HorizontalLayout();
+        taskStatus.setWidthFull();
+        taskStatus.setAlignItems(FlexComponent.Alignment.CENTER);
+        taskStatus.setJustifyContentMode(FlexComponent.JustifyContentMode.CENTER);
+
         taskGrid = new Grid<>(Task.class, false);
         taskGrid.getStyle().set("margin", "10px");
+        taskGrid.setAllRowsVisible(true);
+        taskGrid.setSizeFull();
+        taskGrid.addThemeVariants(
+                GridVariant.LUMO_ROW_STRIPES,
+                GridVariant.LUMO_COLUMN_BORDERS
+        );
+
+        taskLayout = new VerticalLayout();
+        taskLayout.setSizeFull();
+        taskLayout.setFlexGrow(1, taskGrid);
 
         confirmDialogMulti = new ConfirmDialog();
         confirmDialogMulti.setHeader("Delete Collections?");

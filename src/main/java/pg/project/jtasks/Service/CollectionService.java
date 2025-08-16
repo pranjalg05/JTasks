@@ -30,19 +30,7 @@ public class CollectionService {
         collectionRepository.save(collection);
     }
 
-    public void editCollection(ObjectId collectionId, Collection newCollection) {
-        Collection collectionInDb = collectionRepository.findById(collectionId).orElse(null);
-        if (collectionInDb == null) {
-            log.error("User Doesn't exist");
-            return;
-        }
-        try {
-            collectionInDb.setCollectionName(newCollection.getCollectionName());
-            collectionRepository.save(collectionInDb);
-        } catch (Exception e) {
-            log.error("Error updating collection", e);
-        }
-    }
+
 
     public void deleteCollection(ObjectId collectionId){
         taskRepository.deleteAllByCollectionId(collectionId);

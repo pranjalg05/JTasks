@@ -85,10 +85,6 @@ public class UserService {
         deleteAllCollectionsOfUser(userId);
     }
 
-    public User getUserById(ObjectId userId) {
-        return userRepository.findById(userId).
-                orElse(null);
-    }
 
     public List<Collection> getAllCollectionOfUser(ObjectId userId) {
         return collectionRepository.getAllByUserId(userId);

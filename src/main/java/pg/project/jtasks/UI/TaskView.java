@@ -40,6 +40,7 @@ public class TaskView extends VerticalLayout implements HasUrlParameter<String> 
     TaskService taskService;
 
     private Collection collection;
+    private VerticalLayout content;
     private Grid<Task> taskGrid;
     private List<Task> taskList;
     private HorizontalLayout topBar;
@@ -62,14 +63,15 @@ public class TaskView extends VerticalLayout implements HasUrlParameter<String> 
         UI.getCurrent().getElement().setAttribute("theme", Lumo.DARK);
         createElements();
         updateNumbers();
+
         setTasks();
-
         setTopBar();
+
         topBar.add(title, status ,addButton);
-        add(topBar);
 
-        add(taskGrid);
+        content.add(topBar, taskGrid);
 
+        add(content);
     }
 
     private void setTopBar(){
@@ -139,6 +141,9 @@ public class TaskView extends VerticalLayout implements HasUrlParameter<String> 
 
     private void createElements(){
 
+        content = new VerticalLayout();
+        content.setSizeFull();
+
 
         taskGrid = new Grid<>(Task.class, false);
         taskGrid.addColumn(new ComponentRenderer<>(task -> {
@@ -153,11 +158,25 @@ public class TaskView extends VerticalLayout implements HasUrlParameter<String> 
         })).setHeader("Status").setWidth("80px").setFlexGrow(0);
         taskGrid.addColumn(Task::getTitle).setHeader("Task");
         taskGrid.addColumn(Task::getDateCreated).setHeader("Date Created");
+        taskGrid.addColumn(new ComponentRenderer<>(task -> {
+            Button delete = new Button(VaadinIcon.TRASH.create());
+            delete.addThemeVariants(ButtonVariant.LUMO_PRIMARY, ButtonVariant.LUMO_ERROR);
+            delete.addClickListener(click -> {
+                taskService.deleteTask(task.getTaskId());
+                setTasks();
+            });
+            return delete;
+        })).setHeader("Delete").setWidth("80px").setFlexGrow(0);
+
         taskGrid.setEmptyStateText("No Tasks Found");
         taskGrid.addThemeVariants(
                 GridVariant.LUMO_COLUMN_BORDERS,
                 GridVariant.LUMO_ROW_STRIPES
         );
+        taskGrid.setAllRowsVisible(true);
+        taskGrid.setSizeFull();
+
+        content.setFlexGrow(1, taskGrid);
 
         topBar = new HorizontalLayout();
         topBar.setWidthFull();

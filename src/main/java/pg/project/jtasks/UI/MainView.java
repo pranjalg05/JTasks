@@ -291,15 +291,22 @@ public class MainView extends AppLayout {
         int completedTasks = collectionService.numberOfCompletedTasks(collection);
         int totalTasks = collectionService.getTotalTasks(collection);
 
-        Span status = new Span(completedTasks + "/" + totalTasks);
-        status.getElement().getThemeList().add("badge success");
+        String statusText;
+        if (totalTasks == 0) statusText = "Empty";
+        else if (totalTasks == completedTasks) statusText = "Completed";
+        else statusText = completedTasks + "/" + totalTasks;
+        Span status = new Span(statusText);
+
+        status.getElement().getThemeList().add((totalTasks != 0) ? "badge success" : "badge error");
         card.setHeaderSuffix(status);
 
         Span numberOfTasksLeft = new Span((totalTasks - completedTasks) + " Tasks left!");
         Span tasks = new Span(totalTasks + " total Tasks");
         Span doneTasks = new Span(completedTasks + " Tasks accomplished!");
-        numberOfTasksLeft.setWidthFull();
-        card.add(numberOfTasksLeft);
+        VerticalLayout desc = new VerticalLayout(tasks, doneTasks, numberOfTasksLeft);
+        desc.setSpacing(false);
+        desc.setPadding(false);
+        card.add(desc);
 
         HorizontalLayout actions = new HorizontalLayout();
         actions.setWidthFull();
@@ -359,14 +366,14 @@ public class MainView extends AppLayout {
 
         taskGrid.setEmptyStateText("No Tasks Found");
 
-       updateTasks();
+        updateTasks();
 
         taskStatus.add(allTaskStatus);
 
         taskLayout.add(taskStatus, taskGrid);
     }
 
-    private void updateTasks(){
+    private void updateTasks() {
         List<Task> allTasks = new ArrayList<>();
 
         for (Collection c : collections) {
@@ -377,11 +384,16 @@ public class MainView extends AppLayout {
 
         int completedtasks = (int) allTasks.stream().filter(Task::isComplete).count();
 
-        allTaskStatus = new Span();
-        allTaskStatus.setText(completedtasks +"/" + allTasks.size());
-        allTaskStatus.getElement().getThemeList().add("badge success");
+        String allTaskStatusText;
+        if (allTasks.isEmpty()) allTaskStatusText = "Empty";
+        else if (allTasks.size() == completedtasks) allTaskStatusText = "Completed";
+        else allTaskStatusText = completedtasks + "/" + allTasks.size();
+
+        allTaskStatus = new Span(allTaskStatusText);
+        allTaskStatus.getElement().getThemeList().add((!allTasks.isEmpty()) ? "badge success" : "badge error");
         allTaskStatus.setWidth("70px");
         allTaskStatus.setHeight("40px");
+
     }
 
     private void beforeEnter() {

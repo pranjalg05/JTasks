@@ -30,7 +30,7 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
 
         loginBox.setTitle("JTasks");
-        loginBox.setDescription("Coding pmos 🥀");
+        loginBox.setDescription("Tasking made EZ");
         loginBox.setForgotPasswordButtonVisible(false);
         loginBox.setAction("login");
 

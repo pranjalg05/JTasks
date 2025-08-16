@@ -79,12 +79,15 @@ public class TaskView extends VerticalLayout implements HasUrlParameter<String> 
         title = new H1(collection.getCollectionName());
         title.getStyle().set("font-weight", "700");
 
+        String statusText;
+        if (totalTasks == 0) statusText = "Empty";
+        else if (totalTasks == completedTasks) statusText = "Completed";
+        else statusText = completedTasks + "/" + totalTasks;
 
-        status = new Span();
-        status.setText(completedTasks +"/" + totalTasks);
-        status.getElement().getThemeList().add("badge success");
-        status.setWidth("70px");
-        status.setHeight("40px");
+        status = new Span(statusText);
+        status.getElement().getThemeList().add((totalTasks!=0)?"badge success":"badge error");
+        status.setWidth("100px");
+        status.setHeight("45px");
 
         addButton = new Button(VaadinIcon.PLUS.create());
         addButton.addThemeVariants(ButtonVariant.LUMO_PRIMARY);

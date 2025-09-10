@@ -71,6 +71,9 @@ public class MainView extends AppLayout {
     private VerticalLayout taskLayout;
     private HorizontalLayout taskStatus;
     private Span allTaskStatus;
+    private final HorizontalLayout topBar = new HorizontalLayout();
+    private Avatar userAvatar;
+    private Span greeting;
 
 
     @PostConstruct
@@ -93,20 +96,19 @@ public class MainView extends AppLayout {
     }
 
     private void setTopBar() {
-        HorizontalLayout topBar = new HorizontalLayout();
         topBar.setWidthFull();
         topBar.setPadding(false);
         topBar.setSpacing(true);
         topBar.setAlignItems(FlexComponent.Alignment.CENTER);
         topBar.getStyle().set("padding", "0 var(--lumo-space-m)");
 
-        Avatar userAvatar = new Avatar(currentUser.getUsername());
+        userAvatar = new Avatar(currentUser.getUsername());
         userAvatar.addThemeVariants(AvatarVariant.LUMO_LARGE);
         userAvatar.setColorIndex(currentUser.getAvatarColorIndex());
         userAvatar.getStyle().set("margin", "6px");
         userAvatar.getElement().addEventListener("click", click -> setDrawerOpened(!isDrawerOpened()));
 
-        Span greeting = new Span("Hello, " + currentUser.getUsername());
+        greeting = new Span("Hello, " + currentUser.getUsername());
         greeting.getStyle()
                 .set("font-size", "var(--lumo-font-size-m)")
                 .set("font-weight", "500")

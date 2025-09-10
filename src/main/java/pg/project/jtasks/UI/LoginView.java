@@ -20,27 +20,15 @@ import lombok.extern.slf4j.Slf4j;
 public class LoginView extends VerticalLayout implements BeforeEnterObserver {
 
     private final LoginOverlay loginBox  = new LoginOverlay();
+    private Paragraph footer;
+    private H2 title;
 
     LoginView(){
         UI.getCurrent().getElement().setAttribute("theme", "dark");
         setSizeFull();
         setAlignItems(Alignment.CENTER);
         setJustifyContentMode(JustifyContentMode.CENTER);
-
-
-
-        loginBox.setTitle("JTasks");
-        loginBox.setDescription("Tasking made EZ");
-        loginBox.setForgotPasswordButtonVisible(false);
-        loginBox.setAction("login");
-
-        var footer = new Paragraph("New here? ");
-        footer.add(new Anchor("register", "Create an account!"));
-        loginBox.getFooter().add(footer);
-
-
-        H2 title = new H2("Welcome Back!");
-
+        createElements();
         add(title, loginBox);
         loginBox.setOpened(true);
     }
@@ -54,6 +42,20 @@ public class LoginView extends VerticalLayout implements BeforeEnterObserver {
                 .containsKey("error")) {
             loginBox.setError(true);
         }
+    }
+
+    private void createElements(){
+        loginBox.setTitle("JTasks");
+        loginBox.setDescription("Tasking made EZ");
+        loginBox.setForgotPasswordButtonVisible(false);
+        loginBox.setAction("login");
+
+        footer = new Paragraph("New here? ");
+        footer.add(new Anchor("register", "Create an account!"));
+        loginBox.getFooter().add(footer);
+
+
+        title = new H2("Welcome Back!");
     }
 
 }

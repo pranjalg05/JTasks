@@ -26,17 +26,28 @@ public class ProfileView extends VerticalLayout {
     @Autowired
     UserService userService;
 
-    User currentUser;
+    private User currentUser;
 
-    Avatar avatar;
-    H2 nameLabel;
-    TextField usernameField;
-    PasswordField passwordField;
-    PasswordField confirmPasswordField;
-    Button saveButton;
-    Button deleteAccountButton;
-    ConfirmDialog confirmDialog;
-    VerticalLayout content;
+    private Avatar avatar;
+    private H2 nameLabel;
+    private TextField usernameField;
+    private PasswordField passwordField;
+    private PasswordField confirmPasswordField;
+    private Button saveButton;
+    private Button deleteAccountButton;
+    private ConfirmDialog confirmDialog;
+    private VerticalLayout content;
+    @Autowired
+    private AuthenticationContext authContext;
+
+    public ProfileView() {
+
+        setUI();
+        UI.getCurrent().getElement().setAttribute("theme", "dark");
+
+        add(content);
+
+    }
 
     private void setUI() {
 
@@ -91,13 +102,6 @@ public class ProfileView extends VerticalLayout {
         confirmDialog.setConfirmText("Delete");
         confirmDialog.setConfirmButtonTheme("error primary");
 
-    }
-
-    public ProfileView(@Autowired AuthenticationContext authContext) {
-
-        setUI();
-        UI.getCurrent().getElement().setAttribute("theme", "dark");
-
         saveButton.addClickListener(click -> {
             String username = usernameField.getValue().trim();
             String password = passwordField.getValue().trim();
@@ -134,9 +138,8 @@ public class ProfileView extends VerticalLayout {
             authContext.logout();
         });
 
-
-        add(content);
-
     }
+
+
 
 }

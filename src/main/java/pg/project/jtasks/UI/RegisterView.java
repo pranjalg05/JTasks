@@ -1,22 +1,15 @@
 package pg.project.jtasks.UI;
 
 import com.vaadin.flow.component.UI;
-import com.vaadin.flow.component.button.Button;
-import com.vaadin.flow.component.formlayout.FormLayout;
 import com.vaadin.flow.component.html.Anchor;
-import com.vaadin.flow.component.html.H2;
 import com.vaadin.flow.component.html.Paragraph;
-import com.vaadin.flow.component.icon.VaadinIcon;
 import com.vaadin.flow.component.login.LoginI18n;
 import com.vaadin.flow.component.login.LoginOverlay;
 import com.vaadin.flow.component.notification.Notification;
 import com.vaadin.flow.component.orderedlayout.VerticalLayout;
-import com.vaadin.flow.component.textfield.PasswordField;
-import com.vaadin.flow.component.textfield.TextField;
 import com.vaadin.flow.router.PageTitle;
 import com.vaadin.flow.router.Route;
 import com.vaadin.flow.server.auth.AnonymousAllowed;
-import com.vaadin.flow.theme.lumo.LumoUtility;
 import org.springframework.beans.factory.annotation.Autowired;
 import pg.project.jtasks.Service.UserService;
 
@@ -28,17 +21,27 @@ public class RegisterView extends VerticalLayout {
     @Autowired
     UserService userService;
 
+    private final LoginOverlay registerBox = new LoginOverlay();
+    private LoginI18n.Form registerForm;
+    private LoginI18n.Header registerHeader;
+    private Paragraph footer;
+
     public RegisterView() {
         UI.getCurrent().getElement().setAttribute("theme", "dark");
         setAlignItems(Alignment.CENTER);
         setSizeFull();
         setJustifyContentMode(JustifyContentMode.CENTER);
+        createElements();
 
-        LoginOverlay registerBox = new LoginOverlay();
+        add(registerBox);
+
+    }
+
+    private void createElements(){
         LoginI18n i18n = LoginI18n.createDefault();
 
-        var registerForm = i18n.getForm();
-        var registerHeader = new LoginI18n.Header();
+        registerForm = i18n.getForm();
+        registerHeader = new LoginI18n.Header();
 
         registerBox.setForgotPasswordButtonVisible(false);
         registerHeader.setTitle("JTasks");
@@ -67,7 +70,7 @@ public class RegisterView extends VerticalLayout {
                 }
         );
 
-        var footer = new Paragraph("Already have an account? ");
+        footer = new Paragraph("Already have an account? ");
         footer.add(new Anchor("login", "Login here!"));
         registerBox.getFooter().add(footer);
 
@@ -75,7 +78,5 @@ public class RegisterView extends VerticalLayout {
         i18n.setForm(registerForm);
         registerBox.setI18n(i18n);
         registerBox.setOpened(true);
-        add(registerBox);
-
     }
 }

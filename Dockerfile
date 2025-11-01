@@ -1,27 +1,13 @@
-# Use official Java 21 base image
-FROM eclipse-temurin:21-jdk
-
-# Set working directory
+# Stage 1: build
+FROM maven:3.9.6-eclipse-temurin-21 AS build
 WORKDIR /app
-
-# Copy Maven wrapper and config first
-COPY .mvn/ .mvn
-COPY mvnw pom.xml ./
-
-# Fix permissions so ./mvnw can run
+COPY . .
 RUN chmod +x mvnw
+RUN ./mvnw clean package -Pproduction -DskipTests
 
-# Pre-download dependencies
-RUN ./mvnw dependency:go-offline
-
-# Copy source code
-COPY src ./src
-
-# Build the application (skip tests)
-RUN ./mvnw clean package -DskipTests
-
-# Expose port (Render sets PORT, so just for clarity)
+# Stage 2: run
+FROM eclipse-temurin:21-jdk
+WORKDIR /app
+COPY --from=build /app/target/*.jar app.jar
 EXPOSE 8080
-
-# Run the built JAR
-CMD ["java", "-jar", "target/JTasks-0.0.1-SNAPSHOT.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]

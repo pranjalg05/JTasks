@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: JTasks
+  data:
+    mongodb:
+      database: jTasksdb
+      auto-index-creation: true
+      uri: ${MONGODB_URI}
+vaadin:
+  productionMode: true
+server:
+  port: ${PORT:8080}
